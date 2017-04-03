@@ -48,69 +48,10 @@ for apply_rest               api_url:  ,  api_post: , api_column_fetch:  , type:
 
 # EXAMPLE
 
+Salary people should work betweek 40 and 45 hours per week. Also don't ever make people work during early morning and late afternoon regardless of their stress profiles
 
-## 1) On saturday or sunday shifts don’t schedule full timers!
-
-{ scorers: [{type:field_matches , params:[ 
-{field:"Shift.DayOfWeek",data:"Sat",type:"eq”}  , {field:”Shift.EmployeeObject.Agreement. SalaryPayRule”,data:”0”,type:”ne”}]},{type:field_matches , params:[ 
-{field:"Shift.DayOfWeek",data:”Sun”,type:"eq”}  , {field:”Shift.EmployeeObject.Agreement. SalaryPayRule”,data:”0”,type:”ne”}]} ]   }
-
-
-## 2) John and Mary should not work at the same area at the same time
-
-{ scorers: [
-{name: ‘john_shifts’ , type:’field_matches’ , params:[ 
-{field:"Shift.EmployeeObject.DisplayName”,data:”John%”,type:”lk”}],score:0}, 
-{name: ‘mary_shifts’ , type:’field_matches’ , params:[ 
-{field:"Shift.EmployeeObject.DisplayName”,data:”Mary%”,type:”lk”}],score:0}, 
-{type: overlap , params:[ rules:[john_shifts , mary_shifts] ] , score:-1 } 
-]}
+```{"scorers":[{"type":"employee_totals","score":10,"params":{"employee_property_name":"Agreement.ContractObject.BasePayRuleObject.RemunerationType","employee_property_match":"2","employee_property_match_type":"eq","compare_value":40,"compare_type":"ge","compare_total":"TotalTime"}},{"type":"employee_totals","score":-20,"params":{"employee_property_name":"Agreement.ContractObject.BasePayRuleObject.RemunerationType","employee_property_match":"2","employee_property_match_type":"eq","compare_value":45,"compare_type":"ge","compare_total":"TotalTime"}},{"type":"field_matches","score":0,"name":"morning_shifts","params":[{"field":"Shift.StartTimeQ.Hour","data":12,"type":"lt"}]},{"type":"field_matches","score":0,"name":"late_shifts","params":[{"field":"Shift.StartTimeQ.Hour","data":18,"type":"ge"}]},{"type":"overlap","score":-10,"params":{"rules":["morning_shifts","late_shifts"],"column":"Shift.Employee"}}]}```
 
 
 
-
-## 3) At least one person at all time will should have a first aid certificate training
-
-{ scorers: [
-{name: ‘first_aid_shifts’ , type:’field_matches’ , params:[ 
-{field:"Shift.EmployeeObject.Training.ModuleObject.ModuleName”,data:”First Aid”,type:”lk”}],score:0}, 
-{name: ‘monday_shifts’ , type:’field_matches’ , params:[ {field:"Shift.DayOfWeek",data:”Mon”,type:"eq”}] , score:0} , 
-{name: ‘tuesday_shifts’ , type:’field_matches’ , params:[ {field:"Shift.DayOfWeek",data:”Tues”,type:"eq”}] , score:0} , 
-{type: overlap , params:[ rules:[john_shifts , monday_shifts] ] , score;1 }, 
-{type: overlap , params:[ rules:[first_aid_shifts , tuesday_shifts] ] , score;1 }, 
-]}
-
-
-
-## 4) Anyone who has employment term PT, give them at least 20 hours, max 22.. But no more
-
-{ scorers: [ 
-{type: employee_totals , params:{employeePropertyName: “Agreement. ContractObject.Name” , employeePropertyMatch:”PT” , total: 20  ,   type: ge } , score;2 },
-{type: employee_totals , params:{employeePropertyName: “Agreement. ContractObject.Name” , employeePropertyMatch:”PT” , total: 22  ,   type: le } , score;1 } 
-]}
-
-
-
-
-## 5) if you worked weekend last week, don’t work weekend this week
-
-
-{ scorers: [ 
-{type: apply_rest , params:{api_url:”resource/Roster/QUERY”  ,  api_post: {"search":{"esearchl":{"field”:”Id”,”type":"eq","data”:”__Shift.Employee__”},”dsearch":{"field”:”Date”,”type":"eq","data”:”__Shift.DateObj.Sub7Day.YMD__”},”satsearch":{"field”:”Date”,”type":"eq","data”:”__objDTWeekStart.Add1Day.Add1Day.Add1Day.Add1Day.Add1Day.YMD__”}}}
- , api_column_fetch: “Id”  , type: “ge” , data:”0”} , score:-1 }
-]}
-
-
-
-## 6) Do not give someone more than two shifts in one day
-
-
-{ scorers: [
-{name: ‘morning_shifts’ , type:’field_matches’ , params:[ 
-{field:"Shift.StartTimeQ.Hour”,data:”12”,type:”lt”}],score:0}, 
-{name: ‘afternoon_shifts’ , type:’field_matches’ , params:[ 
-{field:"Shift.StartTimeQ.Hour”,data:”12”,type:”ge”}],score:0}, 
-{type: overlap , params:[ rules:[morning_shifts , afternoon_shifts] , column : ‘Shift.Employee’ ] , score;-1 }
-]}
-
-
+More examples to follow but feel free to contact 
