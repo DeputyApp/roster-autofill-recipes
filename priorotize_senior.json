@@ -1,0 +1,1 @@
+{"scorers":[{"type":"field_matches","score":10,"params":[{"field":"Shift.EmployeeObject.StartDate","data":"2012-12-31","type":"le"}]}]}
