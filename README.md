@@ -6,7 +6,7 @@ E.g.
 
 * Restaurants: Part timers are cheaper but don’t give too many hours to them!
 * Maintenance : Engineers that worked last weekend should not work this weekend.
-* Healthcare: Someone should be always be working with First Aid training
+* Healthcare: Every shift must have at least one person with First Aid training.
 
 
 # Where
