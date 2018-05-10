@@ -4,9 +4,9 @@ Deputy Rostering AutoFill is used for giving further directions/customizations t
 
 E.g.
 
-Restaurants: Part timers are cheaper but don’t give too many hours to them!
-Maintenance : Engineers that worked last weekend should not work this weekend.
-Healthcare: Someone should be always be working with First Aid training
+* Restaurants: Part timers are cheaper but don’t give too many hours to them!
+* Maintenance : Engineers that worked last weekend should not work this weekend.
+* Healthcare: Someone should be always be working with First Aid training
 
 
 # Where
